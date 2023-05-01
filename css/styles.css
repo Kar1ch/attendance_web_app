@@ -9,15 +9,47 @@ body{
     font-family         : Verdana, Geneva, sans-serif;
     /*background-color    : #0E615E;*/
     background-color    : #FDFDFF;
-    color               : white;
+    /*color               : #FDFDFF;*/
+    color: rgb(48, 48, 48);
 }
 
-.header{
-    padding             : 3%;
+main{
+    height: 100%;
+}
+
+.hide{
+    display             : none;
+}
+
+
+.attendance-header{
+    text-align          : center;
+    padding             : 24px;
+    color               : #FDFDFF;
+    background-color    : #8CBBF1;
+    font-size           : 1.6em;
+    font-weight         : 600;
+}
+
+.auth-header{
+    color               : #FDFDFF;
+    padding             : 24px;
     background-color    : #8CBBF1;
     text-align          : center;
     font-size           : 1.6em;
     font-weight         : 600;
+}
+
+
+.exit-from-account{
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #FCEECB;
+    color: #E1BF5F;
+    position: absolute;
+    top: 14px;
+    left: 14px;
 }
 
 .auth-content{
@@ -26,11 +58,15 @@ body{
     align-items: center;
 }
 
-.auth-form{font-size: 16px;
+table{
+    margin: 10px;
+}
+
+.auth-form{
+    font-size: 16px;
     margin-top: auto;
     margin: auto;
     max-width               : 200px;
-    display                 : list-item;
     text-align              : center;
 }
 
@@ -48,6 +84,10 @@ input{
 
 textarea:focus, input:focus{
     outline: none;
+}
+
+#auth-fields-not-filled{
+    color: #E287A0;
 }
 
 .auth-submit{
@@ -70,4 +110,47 @@ textarea:focus, input:focus{
     border: none;
     /*margin-left: 1%;*/
     transition: background-color 0.2s;
+}
+
+.user-greetings{
+    padding: 16px;
+    color: rgb(48, 48, 48);
+}
+
+table{
+    border-collapse: collapse;
+}
+
+td, tr{
+    border: 1px solid ;
+}
+
+@media screen and (max-width: 882px) {
+    .attendance-header{
+        text-align          : start;
+        padding             : 12px;
+        padding-left        : 35%;
+        background-color    : #8CBBF1;
+        font-size           : 1.4em;
+        font-weight         : 600;
+    }
+
+    .auth-header{
+        text-align: center;
+        padding             : 12px;
+        background-color    : #8CBBF1;
+        font-size           : 1.4em;
+        font-weight         : 600;
+    }
+
+    .exit-from-account{
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        background-color: #FCEECB;
+        color: #E1BF5F;
+        position: absolute;
+        top: 7px;
+        left: 7px;
+    }
 }
