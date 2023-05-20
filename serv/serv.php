@@ -34,7 +34,7 @@ if(isset($_GET['get_comm']))
                 echo json_encode($myArray);
             }
         }else{
-            echo 'error_comm1';
+            echo 'error_get1';
         }
     }
 
@@ -90,7 +90,7 @@ if(isset($_GET['get_comm']))
         }
     }
 
-    if($get_comm == 5){ //check_for_admin
+    if($get_comm == 5){ //Получение списка студентов с их посещаемостью
         //echo ('test');
         $admin_id = $_GET['admin_id'];
         $sql = "SELECT name FROM students order by name";
@@ -107,6 +107,22 @@ if(isset($_GET['get_comm']))
         }
     }
 
+    if($get_comm == 6){ //Получение списка студентов
+        //echo ('test');
+        $admin_id = $_GET['admin_id'];
+        $sql = "SELECT * FROM students order by name";
+        $result5 = mysqli_query($db, $sql);
+        $myArray = array();
+        if($result5){
+            while($Arr5 = mysqli_fetch_assoc($result5)){
+                $myArray[] = $Arr5;
+            }
+
+            echo json_encode($myArray);
+        }else{
+            echo 'error';
+        }
+    }
 }
 
 

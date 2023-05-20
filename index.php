@@ -6,10 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="js/jquery.cookies.js"></script>
-        <script><?php include "js/scripts.js";?></script>
-
         <style><?php include "css/styles.css";?></style>
     </head>
     <body>
@@ -38,5 +34,10 @@
                 </div>
             </div>
         </main>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="js/jquery.cookies.js"></script>
+        <script><?php include "js/scripts.js";?></script>
     </body>
 </html>
