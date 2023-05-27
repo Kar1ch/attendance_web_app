@@ -20,7 +20,7 @@
 
     //$dat = json_decode($Data, true); // преобразование строки в формате json в ассоциативный массив
 
-    if($_GET['py_get_comm']){
+    if($_GET['py_get_comm']){ // Запрос списка студентов GetStudentsList()
         if ($_GET['py_get_comm'] == 1){
             $sql1 = "SELECT * FROM `students`";
             $result2_1 = mysqli_query($db, $sql1);
@@ -41,7 +41,7 @@
     }
 
 
-    if($_POST['py_post_comm']){
+    if($_POST['py_post_comm']){ // Проставление посещаемости StudentAttendanceSet(Номер студака, текущая дата, текущая пара)
         if($_POST['py_post_comm'] == 1){
             $student_id = $_POST['student'];
             $current_date = $_POST['cur_date'];
@@ -77,7 +77,7 @@
             }
         }
 
-        if($_POST['py_post_comm'] == 2){
+        if($_POST['py_post_comm'] == 2){ // Добавление студента в базу StudentAddToDataBase(Номер студака, ФИО стиудента, пароль студента)
             $studak = $_POST['studak'];
             $name = $_POST['name'];
             $password = md5($_POST['name'] .''. $_POST['password']);

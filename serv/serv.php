@@ -12,13 +12,13 @@ if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1" ){
     $db = mysqli_connect('localhost', 'cg86624_attendan', 'pass', 'cg86624_attendan');
     if (!$db) {die("Connection failed: " . mysqli_connect_error());}
 }
-
+include('logs.php');
 
 if(isset($_GET['get_comm']))
 {
     $get_comm = $_GET['get_comm'];
 
-    if($get_comm == 1){//Авторизация
+    if($get_comm == 1){ //Авторизация Auth(login, password)
         //echo 'test';
         $login = $_GET['login'];
         $password = $_GET['password'];
@@ -32,13 +32,15 @@ if(isset($_GET['get_comm']))
             if($Arr1['password'] == $hash){
                 $myArray[] = $Arr1;
                 echo json_encode($myArray);
+                AddLog(1, $login, "Auth($login, $password)", 'Удачная авторизация');
             }
         }else{
             echo 'error_get1';
+            AddLog(0, $login, "Auth($login, $password)", 'Не удалось авторизироваться');
         }
     }
 
-    if($get_comm == 2){//Получение дат пар для конкретного студента
+    if($get_comm == 2){//Получение дат пар для конкретного студента UniqDates(Student_id)
         //echo ('test');
         $student_id = $_GET['student_id'];
         $sql = "SELECT distinct date FROM attendance_accounting WHERE student_id = '$student_id'";
@@ -50,12 +52,14 @@ if(isset($_GET['get_comm']))
             }
 
             echo json_encode($myArray);
+            AddLog(1, 'user', "UniqDates($student_id)", 'Удачно получены даты пар для студента');
         }else{
             echo 'error';
+            AddLog(0, 'user', "UniqDates($student_id)", 'Не удалось получить даты пар для студента');
         }
     }
 
-    if($get_comm == 3){//Получение посещаемости студента в конкретный день
+    if($get_comm == 3){//Получение посещаемости студента в конкретный день CurrentDate(Student_id, Current_data)
         //echo ('test');
         $student_id = $_GET['student_id'];
         $current_date = $_GET['current_date'];
@@ -66,14 +70,15 @@ if(isset($_GET['get_comm']))
             while($Arr3 = mysqli_fetch_assoc($result3)){
                 $myArray[] = $Arr3;
             }
-
             echo json_encode($myArray);
+            AddLog(1, 'user', "CurrnetDate($student_id, $current_date)", 'Получена посещаемость студента в конкретный день');
         }else{
             echo 'error';
+            AddLog(0, 'user', "CurrnetDate($student_id, $current_date)", 'Не удалось получить посещаемость студента в конкретный день');
         }
     }
 
-    if($get_comm == 4){ //check_for_admin
+    if($get_comm == 4){ //check_for_admin(Admin_id)
         //echo ('test');
         $admin_id = $_GET['admin_id'];
         $sql = "SELECT name FROM students WHERE password = '$admin_id'";
@@ -85,12 +90,14 @@ if(isset($_GET['get_comm']))
             }
 
             echo json_encode($myArray);
+            AddLog(1, 'Староста', "check_for_admin($admin_id)", 'Проверка на админа пройдена');
         }else{
             echo 'error';
+            AddLog(0, 'Староста', "check_for_admin($admin_id)", 'Проверка на админа не пройдена');
         }
     }
 
-    if($get_comm == 5){ //Получение списка студентов с их посещаемостью
+    if($get_comm == 5){ //Получение списка студентов с их посещаемостью GetStudenstListWithAttendance(admin_id)
         //echo ('test');
         $admin_id = $_GET['admin_id'];
         $sql = "SELECT name FROM students order by name";
@@ -102,12 +109,14 @@ if(isset($_GET['get_comm']))
             }
 
             echo json_encode($myArray);
+            AddLog(1, 'Староста', "GetStudenstListWithAttendance($admin_id)", 'Получен список студентов с их посещаемостью');
         }else{
             echo 'error';
+            AddLog(0, 'Староста', "GetStudenstListWithAttendance($admin_id)", 'Не удалось получить список студентов с их посещаемостью');
         }
     }
 
-    if($get_comm == 6){ //Получение списка студентов
+    if($get_comm == 6){ //Получение списка студентов GetStudentsList(admin_id)
         //echo ('test');
         $admin_id = $_GET['admin_id'];
         $sql = "SELECT * FROM students order by name";
@@ -119,8 +128,10 @@ if(isset($_GET['get_comm']))
             }
 
             echo json_encode($myArray);
+            AddLog(1, 'Староста', "GetStudentsList($admin_id)", 'Получен список студентов');
         }else{
             echo 'error';
+            AddLog(0, 'Староста', "GetStudentsList($admin_id)", 'Не удалось получить список студентов');
         }
     }
 }
