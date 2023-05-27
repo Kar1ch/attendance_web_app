@@ -170,6 +170,24 @@ if(isset($_GET['get_comm']))
             AddLog(0, 'Староста', "GetStudentsList($admin_id)", 'Не удалось получить список студентов');
         }
     }
+    if($get_comm == 9){ //Получение статуса студента за конкретную пару
+        //echo ('test');
+        $date = $_GET['date'];
+        $lesson_number = $_GET['lesson_number'];
+        $student_id = $_GET['stud_id'];
+        $sql = "SELECT status FROM `attendance_accounting` WHERE date = '$date' and lesson_number='$lesson_number' and student_id='$student_id'";
+        $result9 = mysqli_query($db, $sql);
+        $myArray = array();
+        if($result9){
+            while($Arr9 = mysqli_fetch_assoc($result9)){
+                $myArray[] = $Arr9;
+            }
+
+            echo json_encode($myArray);
+        }else{
+            echo 'error';
+        }
+    }
 }
 
 
