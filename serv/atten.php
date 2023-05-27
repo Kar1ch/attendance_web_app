@@ -1,9 +1,18 @@
 <?php
 
     //echo 'test';
-    $db = mysqli_connect('localhost', 'cg86624_attendan', 'vXENH58p', 'cg86624_attendan');
-    if (!$db) {die("Connection failed: " . mysqli_connect_error());}
-
+    if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1" ){
+        $db = mysqli_connect('localhost', 'root', '', 'attendance');
+        if (!$db) {die("Connection failed: " . mysqli_connect_error());}
+        //echo('fd');
+    }else if($_SERVER['REMOTE_ADDR'] == '::1'){
+        $db = mysqli_connect('localhost', 'root', 'root', 'attendance');
+        if (!$db) {die("Connection failed: " . mysqli_connect_error());}
+        //echo ('f');
+    }else{
+        $db = mysqli_connect('localhost', 'cg86624_attendan', 'pass', 'cg86624_attendan');
+        if (!$db) {die("Connection failed: " . mysqli_connect_error());}
+    }
 
     //$Data = file_get_contents('php://input'); // Получаем необработанный текст от входящего запроса
 
