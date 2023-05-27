@@ -91,7 +91,7 @@ async function load_attendance_table(){
                             studentNumber = i + 1;
                             block += 
                                 `<tr class='student-tr' student_id='${response[i].stud_id}'>
-                                    <td>${studentNumber}</td>
+                                    <td>${response[i].stud_id}</td>
                                     <td>${response[i].name}</td>
                                 </tr>`;
                         }
@@ -144,6 +144,50 @@ async function load_attendance_table(){
     }
 
     
+}
+
+async function get_students(){
+    var srvAdr = "serv/serv.php";
+
+    var srvdat = new Object();     
+    srvdat.get_comm = 6;            
+    srvdat.admin_id = $.cookie('admin'); 
+
+    var resp = '';
+
+    await $.get(srvAdr, srvdat, function(data){
+        if (data.length > 0){ // Если есть данные 
+            if (data != 'error'){
+                resp = JSON.parse(data);
+            }
+        }else{alert("Нет ответа от сервера!");} // END Если есть данные
+    })
+    
+    return resp;
+
+}
+
+async function get_status(date, lesson, stud_id){
+    var srvAdr = "serv/serv.php";
+
+    var srvdat = new Object();     
+    srvdat.get_comm = 9;            
+    srvdat.date = date; 
+    srvdat.lesson_number = lesson; 
+    srvdat.stud_id = stud_id; 
+
+    var resp = '';
+
+    await $.get(srvAdr, srvdat, function(data){
+        if (data.length > 0){ // Если есть данные 
+            if (data != 'error'){
+                resp = JSON.parse(data);
+            }
+        }else{alert("Нет ответа от сервера!");} // END Если есть данные
+    })
+    
+    return resp;
+
 }
 
 async function get_attendance_data(date_from, date_to){
@@ -221,7 +265,7 @@ if($.cookie('auth')){
     open_auth_page();
 }
     
-$(function(){//обработка событий после отрисовки всей страницы 
+$(function(){
     $('.exit-from-account').on("click",function(){
         //alert('click');
         clear_auth_cookie();
@@ -238,37 +282,106 @@ $(function(){//обработка событий после отрисовки �
         const date_to = $('#date_end').val();
 
         //const calendar_data = await get_calendar_data(date_from, date_to);
+
+        //Получаем календарь с расписаним за период
         const calendar_data = await get_calendar_data(date_from, date_to);
+        console.log('Календарь: ');
         console.log(calendar_data);
 
+        //Получаем посещаемость за период
         const attendance_data = await get_attendance_data(date_from, date_to);
+        console.log('Посещаемость: ');
         console.log(attendance_data);
+
+
+        //Получаем список студентов
+        const students_list = await get_students();
+        console.log('Студенты: ');
+        console.log(students_list);
+
+        
+
 
         var calendar_unick_dates = [];
         var dates_cnt = 0;
+
+        var dates_p = 0;
         for(let i = 0; i < Object.keys(calendar_data).length; i++){
             //alert(Object.keys(response).length);
             
             if (!calendar_unick_dates.includes(calendar_data[i].date)){
                 dates_cnt++;
-                $('.dates-tr').append('<td class="' + calendar_data[i].date+ '" colspan="1">' + calendar_data[i].date + '</td>');
+                $('.dates-tr').append('<td class="' + calendar_data[i].date+ '" colspan="0">' + calendar_data[i].date + '</td>');
                 calendar_unick_dates.push(calendar_data[i].date);
 
-                for(let j = 0; j < Object.keys(attendance_data).length; j++){
-                    if (attendance_data[j].date == calendar_data[i].date){
-                        $('.atten-headers').append('<td>' + attendance_data[j].lesson_number + '</td>');
+                /*
+                var j=0;
+                while(attendance_data[j].date == calendar_data[i].date){
+
+                    if(!unick_lesson_numbers.includes(attendance_data[j].lesson_number)){
+                        //console.log('asd' + attendance_data[j].date);
+                        $('.atten-headers').append('<td class>' + attendance_data[j].lesson_number + '</td>');
+
                         var cur_colspan = $('.' + attendance_data[j].date).attr('colspan');
                         $('.' + attendance_data[j].date).attr('colspan', cur_colspan + 1);
+
+                        unick_lesson_numbers.push(attendance_data[j].lesson_number);
+                    }
+
+                    j++;
+                }
+                */
+
+                //console.log('qwe  ');
+
+                var unick_lesson_numbers = []; 
+                for(let j = dates_p; j < Object.keys(calendar_data).length; j++){
+                    //console.log(j);
+                    if (calendar_data[j].date == calendar_data[i].date){
+                        //console.log(attendance_data[j].date);
+
+                        if(!unick_lesson_numbers.includes(calendar_data[j].lesson_number)){
+                            //console.log('asd  ' + attendance_data[j].date);
+                            $('.atten-headers').append('<td lesson-number="'+ calendar_data[j].lesson_number  + '" lesson-date="'+ calendar_data[j].date  + '">' + calendar_data[j].lesson_number + '</td>');
+
+                            //$('.atten-headers').append('<td lesson-number="'+ calendar_data[j].lesson_number  + '" lesson-date="'+ calendar_data[j].date  + '">' + calendar_data[j].lesson_number + '</td>');
+                            var cur_colspan = $('.' + calendar_data[j].date).attr('colspan');
+                            $('.' + calendar_data[j].date).attr('colspan', parseInt(cur_colspan) + 1);
+
+                            unick_lesson_numbers.push(calendar_data[j].lesson_number);
+
+                            for(let k = 0; k < Object.keys(students_list).length; k++){
+                                //Получаем список студентов
+                                const status_data = await get_status(calendar_data[j].date, calendar_data[j].lesson_number, students_list[k].stud_id);
+                                //console.log('Статус: ');
+                                //console.log(Object.keys(status_data).length);
+
+                                //var s = status_data.status;
+                                //console.log(s);
+
+                                if (Object.keys(status_data).length > 0){
+                                    $('.student-tr').filter('[student_id="'+ students_list[k].stud_id +'"]').append('<td>' + status_data[0].status + '</td>');
+                                }else{
+                                    $('.student-tr').filter('[student_id="'+ students_list[k].stud_id +'"]').append('<td></td>');
+                                }
+                                    
+
+                                //console.log('test' + k);
+                            }
+                            /* третий фор
+                                    проходим по списку студентов и проставляем необходимую отметку
+                            */ 
+                        }
+                        
                     }else{
-                        //break;
+                        dates_p = j;
+                        break;
+                        //$('.atten-headers').append('<td class></td>');
                     }
                     
                 }
+            
             }
-            
-            
-            //var block = '<td>' + response[i].date + '</td>';
-            //$('.atten-headers').append(block);
         }
 
         //console.log(stack);
