@@ -1,5 +1,5 @@
 <?php
-
+    include('logs.php');
     //echo 'test';
     if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1" ){
         $db = mysqli_connect('localhost', 'root', '', 'attendance');
@@ -32,8 +32,10 @@
                 }
     
                 echo json_encode($myArray);
+                AddLog(1, 'Староста', "GetStudentsList()", "Список студентов выведен");
             }else{
                 echo 'error';
+                AddLog(0, 'Староста', "GetStudentsList()", "Ошибка вывода списка студентов");
             }
         }
     }
@@ -57,17 +59,21 @@
                 $result1_2 = mysqli_query($db, $sql2);
                 if(mysqli_num_rows($result1_2) > 0){
                     echo('уже отмечен');
+                    AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Студент уже отмечен");
                 }else{
                     $sql3 = "INSERT INTO `attendance_accounting`(`student_id`, `date`, `lesson_number`, `status`) VALUES ('$student_id_from_table', '$current_date', '$_POST[cur_lesson]', '1')";
                     $result1_3 = mysqli_query($db, $sql3);
                     if($result1_3){
                         echo('поставлена посещаемость');
+                        AddLog(1, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Посещамость проставлена");
                     }else{
                         echo 'посещаемость не поставлена';
-                    }
+                        AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Посещамость не проставлена");                    }
                 }
             }else{
                 echo 'Такого студенческого нет в базе студентов';
+                AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Такого студенческого нет в базе студентов");
+
             }
         }
 
@@ -81,8 +87,10 @@
     
             if($result2_1){
                 echo "Новый студент добавлен в базу";
+                AddLog(1, "Староста", "StudentAddToDataBase($studak, $name, $password)", "Новый студент добавлен в базу");
             }else{
                 echo "Ошибка доавбления нового студента в базу";
+                AddLog(0, "Староста", "StudentAddToDataBase($studak, $name, $password)", "Ошибка добавления нового студента в базу");
             }
         }
     }
