@@ -22,5 +22,5 @@ __Цель проекта - вдохновить людей, способных 
 
 <p align="center">
    <img src="https://img.shields.io/badge/version-1.0(Alpha)-green" alt="AppVersion">
-   <img src="https://img.shields.io/badge/License-MIT-red" alt="License">
+   <img src="https://img.shields.io/badge/License-IndieWorkers-red" alt="License">
 </p>
