@@ -120,11 +120,47 @@ if(isset($_GET['get_comm']))
         //echo ('test');
         $admin_id = $_GET['admin_id'];
         $sql = "SELECT * FROM students order by name";
-        $result5 = mysqli_query($db, $sql);
+        $result6 = mysqli_query($db, $sql);
         $myArray = array();
-        if($result5){
-            while($Arr5 = mysqli_fetch_assoc($result5)){
-                $myArray[] = $Arr5;
+        if($result6){
+            while($Arr6 = mysqli_fetch_assoc($result6)){
+                $myArray[] = $Arr6;
+            }
+
+            echo json_encode($myArray);
+        }else{
+            echo 'error';
+        }
+    }
+
+    if($get_comm == 7){ //Получение посещаемости за период
+        //echo ('test');
+        $date_from = $_GET['date_from'];
+        $date_to = $_GET['date_to'];
+        $sql = "SELECT * FROM attendance_accounting WHERE attendance_accounting.date >= '$date_from' and attendance_accounting.date <= '$date_to' ORDER BY attendance_accounting.date";
+        $result7 = mysqli_query($db, $sql);
+        $myArray = array();
+        if($result7){
+            while($Arr7 = mysqli_fetch_assoc($result7)){
+                $myArray[] = $Arr7;
+            }
+
+            echo json_encode($myArray);
+        }else{
+            echo 'error';
+        }
+    }
+
+    if($get_comm == 8){ //Получение календаря за период
+        //echo ('test');
+        $date_from = $_GET['date_from'];
+        $date_to = $_GET['date_to'];
+        $sql = "SELECT * FROM calendar WHERE calendar.date >= '$date_from' and calendar.date <= '$date_to' ORDER BY calendar.date, calendar.lesson_number";
+        $result8 = mysqli_query($db, $sql);
+        $myArray = array();
+        if($result8){
+            while($Arr8 = mysqli_fetch_assoc($result8)){
+                $myArray[] = $Arr8;
             }
 
             echo json_encode($myArray);
