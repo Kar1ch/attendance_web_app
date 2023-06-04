@@ -14,14 +14,16 @@ if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1" ){
 }
 include('logs.php');
 
+
 if(isset($_GET['get_comm']))
 {
     $get_comm = $_GET['get_comm'];
 
     if($get_comm == 1){ //Авторизация Auth(login, password)
         //echo 'test';
-        $login = $_GET['login'];
-        $password = $_GET['password'];
+        $login = mysqli_real_escape_string($db, $_GET['login']);
+        $password = mysqli_real_escape_string($db, $_GET['password']);
+        
         $tmp = $login ."" . $password;
         $hash = md5($tmp);
         $sql = "SELECT * FROM students WHERE name = '$login' and password = '$hash'";
@@ -36,13 +38,15 @@ if(isset($_GET['get_comm']))
             }
         }else{
             echo 'error_get1';
+            //echo(mysqli_fetch_assoc($result1)[user]);
+            //echo mysqli_fetch_assoc($result1);
             AddLog(0, $login, "Auth($login, $password)", 'Не удалось авторизироваться');
         }
     }
 
     if($get_comm == 2){//Получение дат пар для конкретного студента UniqDates(Student_id)
-        //echo ('test');
-        $student_id = $_GET['student_id'];
+        $student_id = mysqli_real_escape_string($db, $_GET['student_id']);
+
         $sql = "SELECT distinct date FROM attendance_accounting WHERE student_id = '$student_id'";
         $result2 = mysqli_query($db, $sql);
         $myArray = array();
@@ -61,8 +65,9 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 3){//Получение посещаемости студента в конкретный день CurrentDate(Student_id, Current_data)
         //echo ('test');
-        $student_id = $_GET['student_id'];
-        $current_date = $_GET['current_date'];
+        $student_id = mysqli_real_escape_string($db, $_GET['student_id']);
+        $current_date = mysqli_real_escape_string($db, $_GET['current_date']);
+
         $sql = "SELECT * FROM attendance_accounting WHERE student_id = '$student_id' and date = '$current_date'";
         $result3 = mysqli_query($db, $sql);
         $myArray = array();
@@ -80,7 +85,8 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 4){ //check_for_admin(Admin_id)
         //echo ('test');
-        $admin_id = $_GET['admin_id'];
+        $admin_id = mysqli_real_escape_string($db, $_GET['admin_id']);
+
         $sql = "SELECT name FROM students WHERE password = '$admin_id'";
         $result4 = mysqli_query($db, $sql);
         $myArray = array();
@@ -99,7 +105,9 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 5){ //Получение списка студентов с их посещаемостью GetStudenstListWithAttendance(admin_id)
         //echo ('test');
-        $admin_id = $_GET['admin_id'];
+        $admin_id = mysqli_real_escape_string($db, $_GET['admin_id']);
+
+        //$admin_id = $_GET['admin_id'];
         $sql = "SELECT name FROM students order by name";
         $result5 = mysqli_query($db, $sql);
         $myArray = array();
@@ -117,8 +125,8 @@ if(isset($_GET['get_comm']))
     }
 
     if($get_comm == 6){ //Получение списка студентов GetStudentsList(admin_id)
-        //echo ('test');
-        $admin_id = $_GET['admin_id'];
+        $admin_id = mysqli_real_escape_string($db, $_GET['admin_id']);
+
         $sql = "SELECT * FROM students order by name";
         $result6 = mysqli_query($db, $sql);
         $myArray = array();
@@ -135,8 +143,9 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 7){ //Получение посещаемости за период
         //echo ('test');
-        $date_from = $_GET['date_from'];
-        $date_to = $_GET['date_to'];
+        $date_from = mysqli_real_escape_string($db, $_GET['date_from']);
+        $date_to = mysqli_real_escape_string($db, $_GET['date_to']);
+
         $sql = "SELECT * FROM attendance_accounting WHERE attendance_accounting.date >= '$date_from' and attendance_accounting.date <= '$date_to' ORDER BY attendance_accounting.date";
         $result7 = mysqli_query($db, $sql);
         $myArray = array();
@@ -153,8 +162,9 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 8){ //Получение календаря за период
         //echo ('test');
-        $date_from = $_GET['date_from'];
-        $date_to = $_GET['date_to'];
+        $date_from = mysqli_real_escape_string($db, $_GET['date_from']);
+        $date_to = mysqli_real_escape_string($db, $_GET['date_to']);
+
         $sql = "SELECT * FROM calendar WHERE calendar.date >= '$date_from' and calendar.date <= '$date_to' ORDER BY calendar.date, calendar.lesson_number";
         $result8 = mysqli_query($db, $sql);
         $myArray = array();
@@ -170,11 +180,13 @@ if(isset($_GET['get_comm']))
             AddLog(0, 'Староста', "GetStudentsList($admin_id)", 'Не удалось получить список студентов');
         }
     }
+
     if($get_comm == 9){ //Получение статуса студента за конкретную пару
         //echo ('test');
-        $date = $_GET['date'];
-        $lesson_number = $_GET['lesson_number'];
-        $student_id = $_GET['stud_id'];
+        $date = mysqli_real_escape_string($db, $_GET['date']);
+        $lesson_number = mysqli_real_escape_string($db, $_GET['lesson_number']);
+        $student_id = mysqli_real_escape_string($db, $_GET['stud_id']);
+
         $sql = "SELECT status FROM `attendance_accounting` WHERE date = '$date' and lesson_number='$lesson_number' and student_id='$student_id'";
         $result9 = mysqli_query($db, $sql);
         $myArray = array();

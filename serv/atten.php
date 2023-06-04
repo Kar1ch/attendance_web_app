@@ -43,8 +43,11 @@
 
     if($_POST['py_post_comm']){ // Проставление посещаемости StudentAttendanceSet(Номер студака, текущая дата, текущая пара)
         if($_POST['py_post_comm'] == 1){
-            $student_id = $_POST['student'];
-            $current_date = $_POST['cur_date'];
+            $student_id = mysqli_real_escape_string($db, $_GET['student_id']);
+            $current_date = mysqli_real_escape_string($db, $_GET['cur_date']);
+
+            //$student_id = $_POST['student'];
+            //$current_date = $_POST['cur_date'];
     
             $sql1 = "SELECT * FROM `students` WHERE studak = '$student_id'";
             $result1_1 = mysqli_query($db, $sql1);
@@ -68,18 +71,21 @@
                         AddLog(1, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Посещамость проставлена");
                     }else{
                         echo 'посещаемость не поставлена';
-                        AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Посещамость не проставлена");                    }
+                        AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Посещамость не проставлена");     
+                    }
                 }
             }else{
                 echo 'Такого студенческого нет в базе студентов';
                 AddLog(0, "Староста", "StudentAttendanceSet($student_id, $current_date, $current_lesson)", "Такого студенческого нет в базе студентов");
-
             }
         }
 
         if($_POST['py_post_comm'] == 2){ // Добавление студента в базу StudentAddToDataBase(Номер студака, ФИО стиудента, пароль студента)
-            $studak = $_POST['studak'];
-            $name = $_POST['name'];
+            $studak = mysqli_real_escape_string($db, $_GET['studak']);
+            $name = mysqli_real_escape_string($db, $_GET['name']);
+
+            //$studak = $_POST['studak'];
+            //$name = $_POST['name'];
             $password = md5($_POST['name'] .''. $_POST['password']);
     
             $sql2 = "INSERT INTO `students`(`studak`, `name`, `password`, `admin`) VALUES ('$studak', '$name','$password','0')";
