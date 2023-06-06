@@ -1,11 +1,24 @@
+# --- Настройка окружения ---
+#
+# Для начала тестировки на компьютер с Ubuntu 22.04.2 LTS были установлены и настроены 
+# The Apache HTTP Server и MySQL Cluster Community Server. С сервера на локальный компьютер 
+# была экспортирована база данных и исходный код проекта.
+#
+# --- Тест---
+#
+# На данный момент тест способен проверять команды из модулей serv.php и atten.php. 
+# Некоторые функции требуют дополнительно id администратора, указанного в базе.
+
+
+
 import mysql.connector
 import requests
 import json
 
 
 default_query="SELECT name FROM students order by name"
-
-def bdquery(query=default_query):
+# Запрос к локальной базе данных.
+def bdquery(query=default_query): 
 
     config = {
               'user': 'root',
@@ -35,7 +48,7 @@ def bdquery(query=default_query):
 
 
 default_url="http://192.168.1.79:2222/attendance_web_app/serv/serv.php"
-
+# Запрос к локальному серверу.
 def servquery(url=default_url, payload={'get_comm' : 1,}):
 
     #admin_id = "********"
