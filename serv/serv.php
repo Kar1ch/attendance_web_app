@@ -21,8 +21,10 @@ if(isset($_GET['get_comm']))
 
     if($get_comm == 1){ //Авторизация Auth(login, password)
         //echo 'test';
+        session_start();
         $login = mysqli_real_escape_string($db, $_GET['login']);
         $password = mysqli_real_escape_string($db, $_GET['password']);
+        //echo $_SESSION["username"];
         
         $tmp = $login ."" . $password;
         $hash = md5($tmp);
@@ -33,13 +35,13 @@ if(isset($_GET['get_comm']))
             $Arr1 = mysqli_fetch_assoc($result1);
             if($Arr1['password'] == $hash){
                 $myArray[] = $Arr1;
-                echo json_encode($myArray);
+                $_SESSION['username'] = $Arr1['name'];
+                $_SESSION['password'] = $Arr1['password'];
+                echo json_encode($_SESSION['password']);
                 AddLog(1, $login, "Auth($login, $password)", 'Удачная авторизация');
             }
         }else{
             echo 'error_get1';
-            //echo(mysqli_fetch_assoc($result1)[user]);
-            //echo mysqli_fetch_assoc($result1);
             AddLog(0, $login, "Auth($login, $password)", 'Не удалось авторизироваться');
         }
     }

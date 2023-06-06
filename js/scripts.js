@@ -258,6 +258,8 @@ function open_attendance_page(){
     $('#attendance-page').removeClass('hide');
 }
 
+//alert(sessionStorage.getItem('username'));
+
 
 if($.cookie('auth')){
     open_attendance_page();
