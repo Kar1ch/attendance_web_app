@@ -1,1 +1,98 @@
+import mysql.connector
+import requests
+import json
 
+
+default_query="SELECT name FROM students order by name"
+
+def bdquery(query=default_query):
+
+    config = {
+              'user': 'root',
+              'password': '********',
+              'host': 'localhost',
+              'database': 'attendance',
+              'raise_on_warnings': True,
+             }
+    try:
+
+        db = mysql.connector.connect(**config)
+        cursor = db.cursor()
+
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        cursor.close()
+        db.close()       
+
+        print(result)   
+    
+    except mysql.connector.Error as e: 
+
+        print(e)
+
+    return result
+
+
+default_url="http://192.168.1.79:2222/attendance_web_app/serv/serv.php"
+
+def servquery(url=default_url, payload={'get_comm' : 1,}):
+
+    #admin_id = "********"
+    #url = 'http://192.168.1.79:2222/attendance_web_app/serv/atten.php'
+    #payload = {'py_get_comm' : 1,}
+    
+    x = requests.get(url, params=payload)
+    #print(x.text)
+    response = json.loads(x.text)
+
+    #print(response)
+
+    
+    #sprint(response[0]['name'])
+    #response = requests.get(url, params=payload)
+    #print(response)
+    #if response.status_code == 200:
+    #    x = json.loads(response.text)
+    #    print(x[0])
+        #pass
+        #data = response.json()
+        #print(data)
+    #else:
+    #    print('Ошибка при запросе данных.')
+        
+    return response
+
+
+def comparaison_main(bdans, servans):
+    #post get & query k bd
+    print(bdans == servans)
+
+def comparaison_6(bdans, servans):
+    s1, s2 = '',''
+
+    for i in bdans:
+        s1+= i[0]
+    for i in servans:
+        s2+= i["name"]
+
+    return 1 if s1==s2 else 0
+
+    #print(s1, s2)
+
+# TODO 
+#
+# 1. Копируем запросы из php -- любую команду
+# 2. Сравнение sql запросов
+# 3. ...
+# 4. SUCCESS!
+
+bdans = bdquery()
+
+print()
+
+servans = servquery(payload={'get_comm' : 5, 'admin_id' : '********'})
+
+print()
+
+print(comparaison_6(bdans, servans))
