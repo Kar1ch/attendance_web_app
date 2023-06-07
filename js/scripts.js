@@ -1,5 +1,6 @@
 function clear_auth_cookie(){
     $.removeCookie('auth', { path: '/' });
+    $.removeCookie('admin', { path: '/' });
 }
 
 function close_all_page(){
@@ -302,9 +303,7 @@ $(function(){
         const students_list = await get_students();
         console.log('Студенты: ');
         console.log(students_list);
-
         
-
 
         var calendar_unick_dates = [];
         var dates_cnt = 0;
@@ -418,7 +417,7 @@ $(function(){
                 if (data.length > 0){ // Если есть данные 
                     if (data != 'error'){
                         var response = JSON.parse(data);
-                        alert(response.password);
+                        //alert(response.password);
                         $.cookie('auth', response.username, {path: '/' });
                         //alert($.cookie('auth'));
                         if(response.admin == 1){
