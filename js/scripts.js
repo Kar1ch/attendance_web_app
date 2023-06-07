@@ -253,6 +253,7 @@ async function get_calendar_data(date_from, date_to){
 }
 
 function open_attendance_page(){
+    //alert('test');
     close_all_page();
     load_attendance_table();
     $('#attendance-page').removeClass('hide');
@@ -267,6 +268,7 @@ if($.cookie('auth')){
     open_auth_page();
 }
     
+
 $(function(){
     $('.exit-from-account').on("click",function(){
         //alert('click');
@@ -404,7 +406,6 @@ $(function(){
         var login = $('#login').val();
         var password = $('#password').val();
 
-        
         if (login != '' && password != ''){
             var srvAdr = "serv/serv.php";
 
@@ -417,11 +418,11 @@ $(function(){
                 if (data.length > 0){ // Если есть данные 
                     if (data != 'error'){
                         var response = JSON.parse(data);
-                        //alert(data);
-                        $.cookie('auth', response[0].stud_id, {path: '/' });
+                        alert(response.password);
+                        $.cookie('auth', response.username, {path: '/' });
                         //alert($.cookie('auth'));
-                        if(response[0].admin == 1){
-                            $.cookie('admin', response[0].password, {path: '/' });
+                        if(response.admin == 1){
+                            $.cookie('admin', response.password, {path: '/' });
                         }
                         
                         //alert($.cookie('admin'));

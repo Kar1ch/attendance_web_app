@@ -30,14 +30,20 @@ if(isset($_GET['get_comm']))
         $hash = md5($tmp);
         $sql = "SELECT * FROM students WHERE name = '$login' and password = '$hash'";
         $result1 = mysqli_query($db, $sql);
-        $myArray = array();
+        
         if(mysqli_num_rows($result1) == 1){
             $Arr1 = mysqli_fetch_assoc($result1);
             if($Arr1['password'] == $hash){
-                $myArray[] = $Arr1;
+                
                 $_SESSION['username'] = $Arr1['name'];
                 $_SESSION['password'] = $Arr1['password'];
-                echo json_encode($_SESSION['password']);
+                $_SESSION['admin'] = $Arr1['admin'];
+                $myArray = array(
+                    'username' => $_SESSION['username'], 
+                    'password' => $_SESSION['password'],
+                    'admin' => $_SESSION['admin'],
+                );
+                echo json_encode($myArray);
                 AddLog(1, $login, "Auth($login, $password)", 'Удачная авторизация');
             }
         }else{
