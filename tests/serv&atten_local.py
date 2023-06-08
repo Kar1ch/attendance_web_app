@@ -8,6 +8,7 @@
 #
 # На данный момент тест способен проверять команды из модулей serv.php и atten.php. 
 # Некоторые функции требуют дополнительно id администратора, указанного в базе.
+# Вывод 1 означает, что произошел сбой, вывод 0 означает, что тест прошел успешно.
 
 
 
@@ -18,11 +19,11 @@ import json
 
 default_query="SELECT name FROM students order by name"
 # Запрос к локальной базе данных.
-def bdquery(query=default_query): 
+def bdquery(query=default_query):
 
     config = {
               'user': 'root',
-              'password': '********',
+              'password': '*********',
               'host': 'localhost',
               'database': 'attendance',
               'raise_on_warnings': True,
@@ -38,7 +39,7 @@ def bdquery(query=default_query):
         cursor.close()
         db.close()       
 
-        print(result)   
+        #print(result)   
     
     except mysql.connector.Error as e: 
 
@@ -51,7 +52,7 @@ default_url="http://192.168.1.79:2222/attendance_web_app/serv/serv.php"
 # Запрос к локальному серверу.
 def servquery(url=default_url, payload={'get_comm' : 1,}):
 
-    #admin_id = "********"
+    #admin_id = "***********"
     #url = 'http://192.168.1.79:2222/attendance_web_app/serv/atten.php'
     #payload = {'py_get_comm' : 1,}
     
@@ -60,7 +61,6 @@ def servquery(url=default_url, payload={'get_comm' : 1,}):
     response = json.loads(x.text)
 
     #print(response)
-
     
     #sprint(response[0]['name'])
     #response = requests.get(url, params=payload)
@@ -77,21 +77,34 @@ def servquery(url=default_url, payload={'get_comm' : 1,}):
     return response
 
 
-def comparaison_main(bdans, servans):
+def comparaison(bdans, servans):
     #post get & query k bd
     print(bdans == servans)
 
-def comparaison_6(bdans, servans):
+def comparaison_main(bdans, servans):
     s1, s2 = '',''
 
+    print(bdans, "\n", servans)
     for i in bdans:
-        s1+= i[0]
+        s1+= str(i[0])
     for i in servans:
-        s2+= i["name"]
+        s2+= str(i["name"])
+    print(s1, "\n", s2)
 
-    return 1 if s1==s2 else 0
+    return 0 if s1==s2 else 1
 
-    #print(s1, s2)
+def comparaison_atten(bdans, servans):
+    s1, s2 = '',''
+
+    print(bdans, "\n", servans)
+    for i in bdans:
+        s1+= str(i[2])
+    for i in servans:
+        s2+= str(i["name"])
+    #print(s1, "\n", s2)
+
+    return 0 if s1==s2 else 1
+
 
 # TODO 
 #
