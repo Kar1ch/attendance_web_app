@@ -113,12 +113,35 @@ def comparaison_atten(bdans, servans):
 # 3. ...
 # 4. SUCCESS!
 
+print("Тест команды номер 6 из serv.php")
+
 bdans = bdquery()
 
-print()
+servans = servquery(payload={'get_comm' : 6, 'admin_id' : '9ea9c37839152fb8f5ca72ffce02b9ad'})
 
-servans = servquery(payload={'get_comm' : 5, 'admin_id' : '********'})
+print(comparaison_main(bdans, servans))
 
-print()
+print("\nТест команды номер 1 из atten.php")
+
+bdans = bdquery("SELECT * FROM `students`")
+
+servans = servquery(
+    payload={'py_get_comm' : 1}, 
+    url="http://192.168.1.79:2222/attendance_web_app/serv/atten.php"
+    )
+
+print(comparaison_atten(bdans, servans))
+
+print("\nТест команды номер 1 из atten.php")
+
+bdans = bdquery("SELECT * FROM `students`")
+
+servans = servquery(
+    payload={'py_get_comm' : 1}, 
+    url="http://192.168.1.79:2222/attendance_web_app/serv/atten.php"
+    )
+
+print(comparaison_atten(bdans, servans))
+
 
 print(comparaison_6(bdans, servans))
