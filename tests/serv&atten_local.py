@@ -89,7 +89,7 @@ def comparaison_main(bdans, servans):
         s1+= str(i[0])
     for i in servans:
         s2+= str(i["name"])
-    print(s1, "\n", s2)
+    #print(s1, "\n", s2)
 
     return 0 if s1==s2 else 1
 
