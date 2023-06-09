@@ -132,16 +132,4 @@ servans = servquery(
 
 print(comparaison_atten(bdans, servans))
 
-print("\nТест команды номер 1 из atten.php")
 
-bdans = bdquery("SELECT * FROM `students`")
-
-servans = servquery(
-    payload={'py_get_comm' : 1}, 
-    url="http://192.168.1.79:2222/attendance_web_app/serv/atten.php"
-    )
-
-print(comparaison_atten(bdans, servans))
-
-
-print(comparaison_6(bdans, servans))
