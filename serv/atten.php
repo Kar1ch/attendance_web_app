@@ -38,6 +38,28 @@
                 AddLog(0, 'Староста', "GetStudentsList()", "Ошибка вывода списка студентов");
             }
         }
+        if($_GET['py_get_comm'] == 2){
+        
+            $date = $_GET['date'];
+            $lesson = $_GET['lesson'];
+
+            $sql = "SELECT students.student_id, students.name, attendance_accounting.status 
+                    FROM students JOIN attendance_accounting ON students.student_id = attendance_accounting.student_id 
+                    WHERE attendance_accounting.date = '$date' AND attendance_accounting.lessonn = '$lesson'";
+
+            $result2_2 = mysqli_query($db, $sql);
+
+            $myArray = array();
+            if($result2_2){
+                while($Arr2 = mysqli_fetch_assoc($result2_2)){
+                    $myArray[] = $Arr2;
+                }
+                echo json_encode($myArray);
+            }
+            else{
+                echo 'error';
+            }
+        }
     }
 
 
